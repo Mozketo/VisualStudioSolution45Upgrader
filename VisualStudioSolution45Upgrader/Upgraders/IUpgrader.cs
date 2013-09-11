@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace VisualStudioSolution45Upgrader.Upgraders
 {
-    interface IUpgrader
+    public interface IUpgrader
     {
+        List<string> SearchPattern { get; }
         List<string> Upgrade(List<string> lines, out bool didUpgrade);
     }
 }
