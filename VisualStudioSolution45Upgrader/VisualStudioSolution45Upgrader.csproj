@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Upgrader.cs" />
     <Compile Include="Upgraders\BaseUpgrader.cs" />
+    <Compile Include="Upgraders\ComponentModelUpgrader.cs" />
     <Compile Include="Upgraders\DotNet45Upgrader.cs" />
     <Compile Include="Infrastructure\Extensions\DirectoryInfoEx.cs" />
     <Compile Include="Infrastructure\Extensions\FuncEx.cs" />
