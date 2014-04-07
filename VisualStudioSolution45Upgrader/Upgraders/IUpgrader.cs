@@ -8,7 +8,7 @@ namespace VisualStudioSolution45Upgrader.Upgraders
 {
     public interface IUpgrader
     {
-        List<string> SearchPattern { get; }
-        List<string> Upgrade(List<string> lines, out bool didUpgrade);
+        IEnumerable<string> SearchPattern { get; }
+        IEnumerable<string> Upgrade(string filepath, IEnumerable<string> lines, out bool didUpgrade);
     }
 }

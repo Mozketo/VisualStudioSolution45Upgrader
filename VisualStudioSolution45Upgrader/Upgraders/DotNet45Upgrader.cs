@@ -22,7 +22,7 @@ namespace VisualStudioSolution45Upgrader.Upgraders
             get { return _searchPattern; }
         }
 
-        public List<string> Upgrade(List<string> lines, out bool didUpgrade)
+        public List<string> Upgrade(string filename, List<string> lines, out bool didUpgrade)
         {
             lines = base.Upgrade(upgradeAs, lines, out didUpgrade);
             return lines;

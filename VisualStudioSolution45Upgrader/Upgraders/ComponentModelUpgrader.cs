@@ -12,20 +12,20 @@ namespace VisualStudioSolution45Upgrader.Upgraders
     public class ComponentModelUpgrader : BaseUpgrader, IUpgrader
     {
         Dictionary<string, string> upgradeAs = new Dictionary<string, string>();
-        List<string> _searchPattern = new List<string> { "*.cs" };
+        IEnumerable<string> _searchPattern = new List<string> { "*.cs" };
 
         public ComponentModelUpgrader()
         {
             upgradeAs.Add("[Compare(", "[System.ComponentModel.DataAnnotations.Compare(");
         }
 
-        public List<string> Upgrade(List<string> lines, out bool didUpgrade)
+        public IEnumerable<string> Upgrade(string filename, IEnumerable<string> lines, out bool didUpgrade)
         {
             lines = base.Upgrade(upgradeAs, lines, out didUpgrade);
             return lines;
         }
 
-        public List<string> SearchPattern
+        public IEnumerable<string> SearchPattern
         {
             get { return _searchPattern; }
         }

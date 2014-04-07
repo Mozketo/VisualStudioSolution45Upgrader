@@ -11,32 +11,7 @@ namespace VisualStudioSolution45Upgrader
 {
     public class Upgrader
     {
-        public IEnumerable<IUpgrader> Upgraders { get; protected set; }
-
-        public Upgrader()
-        {
-            Upgraders = GetUpgraders();
-        }
-
-        public IEnumerable<IUpgrader> GetUpgraders()
-        {
-            var upgradedTypes = new Dictionary<IUpgrader, bool>();
-            var upgraders = new List<IUpgrader>();
-            var type = typeof(IUpgrader);
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p) && p.IsInterface == false);
-
-            foreach (var t in types)
-            {
-                var upgrader = (IUpgrader)Activator.CreateInstance(t);
-                upgraders.Add(upgrader);
-            }
-
-            return upgraders;
-        }
-
-        public void UpgradeInPath(DirectoryInfo dir, bool recursive = true)
+        public void UpgradeInPath(DirectoryInfo dir, IEnumerable<IUpgrader> upgraders, bool recursive = true)
         {
             var backupFile = FuncEx.Create((string p) => {
                 string date = DateTime.Now.ToString("yyyy-MMM-dd-H-mm-ss");
@@ -51,23 +26,24 @@ namespace VisualStudioSolution45Upgrader
             {
                 foreach (var d in dir.GetDirectories())
                 {
-                    UpgradeInPath(d);
+                    UpgradeInPath(d, upgraders);
                 }
             }
 
-            var searchPatterns = Upgraders.SelectMany(u => u.SearchPattern).Distinct().ToArray(); // Search patterns are defined by the upgrader
+            var searchPatterns = upgraders.SelectMany(u => u.SearchPattern).Distinct().ToArray(); // Search patterns are defined by the upgrader
             var files = dir.GetFiles(searchPatterns);
             foreach (var f in files)
             {
                 backupFile(f.FullName);
 
-                List<string> lines = new List<string>(System.IO.File.ReadAllLines(f.FullName));
+                // http://stackoverflow.com/questions/9213720/most-efficient-way-of-reading-file
+                IEnumerable<string> lines = new List<string>(System.IO.File.ReadAllLines(f.FullName));
 
                 var upgradedTypes = new Dictionary<IUpgrader, bool>();
-                foreach (var upgrader in this.Upgraders)
+                foreach (var upgrader in upgraders)
                 {
                     bool didUpgrade;
-                    lines = upgrader.Upgrade(lines, out didUpgrade);
+                    lines = upgrader.Upgrade(f.FullName, lines, out didUpgrade);
                     upgradedTypes.Add(upgrader, didUpgrade);
                 }
 

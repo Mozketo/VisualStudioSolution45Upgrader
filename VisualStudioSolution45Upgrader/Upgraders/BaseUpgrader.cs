@@ -8,10 +8,11 @@ namespace VisualStudioSolution45Upgrader.Upgraders
 {
     public abstract class BaseUpgrader
     {
-        public virtual List<string> Upgrade(Dictionary<string, string> upgradeFromTo, List<string> lines, out bool didUpgrade)
+        public virtual IEnumerable<string> Upgrade(Dictionary<string, string> upgradeFromTo, IEnumerable<string> input, out bool didUpgrade)
         {
             didUpgrade = false;
 
+            var lines = new List<string>(input);
             foreach (var upgrader in upgradeFromTo)
             {
                 int index = 0;

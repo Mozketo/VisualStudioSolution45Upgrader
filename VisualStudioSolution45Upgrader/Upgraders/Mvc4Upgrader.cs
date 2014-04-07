@@ -13,19 +13,19 @@ namespace VisualStudioSolution45Upgrader.Upgraders
     public class Mvc4Upgrader : BaseUpgrader, IUpgrader
     {
         Dictionary<string, string> upgradeAs = new Dictionary<string, string>();
-        List<string> _searchPattern = new List<string> { "*.csproj", "*.vbproj", "*.fsproj" };
+        IEnumerable<string> _searchPattern = new List<string> { "*.csproj", "*.vbproj", "*.fsproj" };
 
         public Mvc4Upgrader()
         {
             upgradeAs.Add("E53F8FEA-EAE0-44A6-8774-FFD645390401", "E3E379DF-F4C6-4180-9B81-6769533ABE47");
         }
 
-        public List<string> SearchPattern
+        public IEnumerable<string> SearchPattern
         {
             get { return _searchPattern; }
         }
 
-        public List<string> Upgrade(List<string> lines, out bool didUpgrade)
+        public IEnumerable<string> Upgrade(string filename, IEnumerable<string> lines, out bool didUpgrade)
         {
             lines = base.Upgrade(upgradeAs, lines, out didUpgrade);
             return lines;
